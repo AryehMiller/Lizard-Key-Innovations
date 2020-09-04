@@ -10,6 +10,7 @@
 
 library(ape)
 library(phytools)
+library(caper)
 library(ggplot2)
 library(geiger)
 library(coda)
