@@ -4,6 +4,6 @@ This repository contains R scripts and Supplementary  Data files associated with
 
 Supplementary Table 1: Ecological trait database containing habitat occupancy classifications (sourced and modified from Meiri [2018]) and toepad data. 
 
-Supplemental Table 2. Stochastic character mapping results.
+Supplementary Table 2: Stochastic character mapping results.
 
-Supplemental Table 3. Pagel’s Evolutionary Correlation Test results for all models explored.
+Supplementary Table 3: Pagel’s Evolutionary Correlation Test results for all models explored.
