@@ -246,6 +246,7 @@ multi.arboreal.HPD
 multiarbor.origins.losses<- multi.arboreal.HPD$count[,2:7] #all 500 reconstructions with number of origins and reconstructions for each
 colnames(multiarbor.origins.losses) <- c("Arboreal.to.Non.arboreal", "Arboreal.to.Semi.arboreal","Non.arboreal.to.Arboreal","Non.arboreal.to.Semi.arboreal","Semi.arboreal.to.Arboreal","Semi.arboreal.to.Non.arboreal") #rename columns
 multiarbor_origins_losses_df <- as.data.frame(multiarbor.origins.losses)
+summary(multiarbor_origins_losses_df) #Summary statistics for reconstructions
 #HPD Calcs
 Arboreal.to.Semi.arboreal.HPD <- HPDinterval(as.mcmc(multiarbor_origins_losses_df))[2,]
 #176 - 244
