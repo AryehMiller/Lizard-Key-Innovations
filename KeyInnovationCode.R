@@ -239,12 +239,6 @@ legend(x="bottomleft",levels(states_arboreal_multi),pch=22,
 #View probabilities at nodes if curious
 View(summary.multi.arboreality$ace)
 
-#pies
-cols<-setNames(c("#440154FF","#21908CFF","#FDE725FF"),levels(states_arboreal_multi))
-par(fg="transparent",lend=1)
-plot(summary.multi.arboreality,fsize=0,ftype="off",ln=0.4,type="fan",edge.width = 0.5,offset=1,colors=cols)
-add.simmap.legend(colors=cols[3:1],prompt=FALSE,x=0,y=0,vertical=TRUE)
-
 #HPD Calculations and Frequency Distributions
 multi.arboreal.HPD<-describe.simmap(multi.arboreality.SCM.1)
 multi.arboreal.HPD
