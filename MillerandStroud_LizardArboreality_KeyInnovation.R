@@ -514,18 +514,16 @@ padless_fossilized <-as.factor(c(setNames("0","ROOT"),
 
 fit.fixed_dep_y_ARD<-fitPagel(tree_root,padless_fossilized,arboreal_fossilized,dep.var="y",model="ARD") #strict
 fit.fixed_dep_y_ARD
-save(fit.fixed_dep_y_ARD,file="StrictArboreality_FossilizedRootStates_DepY_PadthenArbor.RData")
 plot(fit.fixed_dep_y_ARD)
+title("fit.fixed_dep_y_ARD_Strict")
 
 fit.fixed_dep_x_ARD_Strict<-fitPagel(tree_root,padless_fossilized,arboreal_fossilized,dep.var="x",model="ARD") #strict
 plot(fit.fixed_dep_x_ARD_Strict)
 title("fit.fixed_dep_x_ARD_Strict")
-save(fit.fixed_dep_x_ARD_Strict,file="StrictArboreality_FossilizedRootStates_DepX_PadthenArbor.RData")
 
 fit.fixed_dep_xy_ARD_Strict<-fitPagel(tree_root,padless_fossilized,arboreal_fossilized,dep.var="xy",model="ARD") #strict
 plot(fit.fixed_dep_xy_ARD_Strict)
 title("fit.fixed_dep_xy_ARD_Strict")
-save(fit.fixed_dep_xy_ARD_Strict,file="StrictArboreality_FossilizedRootStates_DepXY_PadthenArbor.RData")
 
 aic_strict<-setNames(c(fit.fixed_dep_x_ARD_Strict$dependent.AIC,
                        fit.fixed_dep_y_ARD$dependent.AIC,
@@ -550,17 +548,14 @@ padless_fossilized <-as.factor(c(setNames("0","ROOT"),
 fit.fixed_dep_y_ARD_Relaxed<-fitPagel(tree_root,padless_fossilized,arboreal_fossilized_relaxed,dep.var="y",model="ARD") #relaxed
 plot(fit.fixed_dep_y_ARD_Relaxed)
 title("fit.fixed_dep_y_ARD_Relaxed")
-#save(fit.fixed_dep_y_ARD_Relaxed,file="RelaxedArboreality_FossilizedRootStates_DepY_PadthenArbor.RData")
 
 fit.fixed_dep_x_ARD_Relaxed<-fitPagel(tree_root,padless_fossilized,arboreal_fossilized_relaxed,dep.var="x",model="ARD") #relaxed
 plot(fit.fixed_dep_x_ARD_Relaxed)
 title("fit.fixed_dep_x_ARD_Relaxed")
-#save(fit.fixed_dep_x_ARD_Relaxed,file="RelaxedArboreality_FossilizedRootStates_DepX_PadthenArbor.RData")
 
 fit.fixed_dep_xy_ARD_Relaxed<-fitPagel(tree_root,padless_fossilized,arboreal_fossilized_relaxed,dep.var="xy",model="ARD") #relaxed
 plot(fit.fixed_dep_xy_ARD_Relaxed)
 title("fit.fixed_dep_xy_ARD_Relaxed")
-#save(fit.fixed_dep_xy_ARD_Relaxed,file="RelaxedArboreality_FossilizedRootStates_DepXY_PadthenArbor.RData")
 
 aic_relaxed<-setNames(c(fit.fixed_dep_x_ARD_Relaxed$dependent.AIC,
                         fit.fixed_dep_y_ARD_Relaxed$dependent.AIC,
@@ -569,8 +564,6 @@ aic_relaxed<-setNames(c(fit.fixed_dep_x_ARD_Relaxed$dependent.AIC,
                         "dependent y","dependent x&y"))
 aic_relaxed
 aic.w(aic_relaxed)
-
-#save.image(file = "FitPagelFixedFossilAugust2020.RData")
 
 ##########################################################################
 ######                                                              ######
@@ -586,14 +579,12 @@ toepads <- data_caper$toepads
 dfTOE <- data.frame(Concatenated, toepads)
 phylod.toes <- phylo.d(dfTOE,tree, names.col = Concatenated, binvar = toepads)
 phylod.toes
-save(phylod.toes, file = "PhyloD_Toepads.RData")
 #Arboreality Binary RELAXED D-statisic
 Concatenated <- data_caper$Concatenated
 arboreal.relaxed.D.statistic <- data_caper$relaxed.arboreal
 df.relaxed <- data.frame(Concatenated, arboreal.relaxed.D.statistic)
 PhyloD.relaxed.arboreal <- phylo.d(df.relaxed, tree, names.col = Concatenated, binvar=arboreal.relaxed.D.statistic)
 PhyloD.relaxed.arboreal
-save(PhyloD.relaxed.arboreal, file = "PhyloD_Relaxed_Arboreality.RData")
 
 #Arboreality Binary STRICT D-statisic
 Concatenated <- data_caper$Concatenated
@@ -601,4 +592,3 @@ arboreal.strict.D.statistic <- data_caper$strict.dataset
 df.strict <- data.frame(Concatenated, arboreal.strict.D.statistic)
 PhyloD.strict.arboreal <- phylo.d(df.strict, tree, names.col = Concatenated, binvar=arboreal.strict.D.statistic)
 PhyloD.strict.arboreal
-save(PhyloD.strict.arboreal, file = "PhyloD_Strict_Arboreality.RData")
