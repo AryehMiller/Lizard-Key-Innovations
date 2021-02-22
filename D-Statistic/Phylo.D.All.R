@@ -4,10 +4,6 @@
 ######                                                              ######
 ##########################################################################
 
-## setwd
-
-setwd("/home/aryehmiller/Projects/Arboreality/PhyloD")
-
 ## Load packages 
 library(ape)
 library(caper)
@@ -84,19 +80,3 @@ Standard.Relaxed.Arboreal.Combo <- data.frame(Concatenated.Standard, Standard.Ar
 Standard.Relaxed.Arboreal.PhyloD <- phylo.d(Standard.Relaxed.Arboreal.Combo, StandardTree, names.col = Concatenated.Standard, binvar=Standard.Arboreal.Relaxed)
 Standard.Relaxed.Arboreal.PhyloD
 
-## Save environment
-
-save.image(file = "PhyloD.Full.Standard.RData")
-
-## Quit R
-
-q()
-
-#!/bin/bash
-#PBS -l nodes=1:ppn=16,walltime=36:00:00
-#PBS -N PhyloD.All
-#PBS -m abe
-
-module load R-3.6.1  
-cd /home/aryehmiller/Projects/Arboreality/PhyloD
-R --file=/home/aryehmiller/Projects/Arboreality/PhyloD/DStatistic.All.R
