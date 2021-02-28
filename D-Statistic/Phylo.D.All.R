@@ -12,12 +12,12 @@ library(caper)
 
 ## Read in datasets
 
-sse_dataset_strict_toepads <- read.csv("sse_dataset_strict_toepads.csv")
-sse_dataset_relaxed_toepads <- read.csv("sse_dataset_relaxed_toepads.csv")
+sse_dataset_strict_toepads <- read.csv("FullStrict_TraitAnalysis.csv")
+sse_dataset_relaxed_toepads <- read.csv("FullRelaxed_TraitAnalysis.csv")
 
 ## Read in phylogeny
 
-FullTree <- read.nexus(file = "pruned.tree.Meiri.RevisedPyron.tre")
+FullTree <- read.nexus(file = "FullTree.tre")
 
 ## Full D-Stat Toepads
 
@@ -48,12 +48,12 @@ Full.Relaxed.Arboreal.PhyloD
 
 ## Read in dataset
 
-sse_dataset_Standard_Strict_toepads<-read.csv("Limbless_sse_dataset_strict_toepads.csv")
-sse_dataset_Standard_Relaxed_toepads<-read.csv("Limbless_sse_dataset_relaxed_toepads.csv")
+sse_dataset_Standard_Strict_toepads<-read.csv("StandardStrict_TraitAnalysis.csv")
+sse_dataset_Standard_Relaxed_toepads<-read.csv("StandardRelaxed_TraitAnalysis.csv")
 
 ## Read in tree
 
-StandardTree <- read.nexus(file = "Meiri23Dec20_LimblessRemoved.tre")
+StandardTree <- read.nexus(file = "StandardTree.tre")
 
 ## Isolate species names
 
