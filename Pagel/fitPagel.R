@@ -1,5 +1,5 @@
 ## fitPagel with fixed ("fossilized") root state
-## Full and Standard (referred to here as "limbless") datasets
+## Full and Standard datasets
 
 library(phytools)
 library(ape)
@@ -8,6 +8,8 @@ library(ggplot2)
 library(viridis)
 library(Hmisc)
 library(ggpubr)
+library(geiger)
+library(reshape2)
 
 ##################################
 ######                      ######
@@ -17,70 +19,60 @@ library(ggpubr)
 
 ## Read in trait dataset
 
-LimblessDataset<- read.csv("Meiri2360_StandardEcologyLimbed.csv", row.names = 1)
+StandardDataset<- read.csv("StandardDataset_MeiriData.csv", row.names = 1)
 
 ## Read in phylogenies
-LimblessTree <- read.nexus(file = "Meiri23Dec20_LimblessRemoved.tre")
+StandardTree <- read.nexus(file = "StandardTree.tre")
 
   
 ## Add tip of zero-length to the root using "bind.tip" and then assigning it non-arboreal and padless
-Limbless.tree.root <-bind.tip(LimblessTree,tip.label="ROOT",edge.length=0,
-                          where=Ntip(LimblessTree)+1)
-#plotTree(Limbless.tree.root,ftype="off",lwd=1)
-nnL<-which(Limbless.tree.root$tip.label=="ROOT")
-tiplabels(Limbless.tree.root$tip.label[nnL],nnL,adj=c(-0.1,0.5),
-          frame="none",cex=0.8,font=3)
+Standard.tree.root <-bind.tip(StandardTree,tip.label="ROOT",edge.length=0,
+                          where=Ntip(StandardTree)+1)
+#plotTree(Standard.tree.root,ftype="off",lwd=1)
+nnL<-which(Standard.tree.root$tip.label=="ROOT")
+#tiplabels(Standard.tree.root$tip.label[nnL],nnL,adj=c(-0.1,0.5),
+#          frame="none",cex=0.8,font=3)
 
 ## Add fossilized root states
-arboreal.strict.Limbless<-as.factor(setNames(LimblessDataset[,4],rownames(LimblessDataset)))
-toepads.Limbless<-as.factor(setNames(LimblessDataset[,7],rownames(LimblessDataset)))
+arboreal.strict.Standard<-as.factor(setNames(StandardDataset[,4],rownames(StandardDataset)))
+toepads.Standard<-as.factor(setNames(StandardDataset[,7],rownames(StandardDataset)))
 
-Limbless.arboreal.strict.fossilized <-as.factor(c(setNames("not.arboreal","ROOT"),
-                                  setNames(as.character(arboreal.strict.Limbless),names(arboreal.strict.Limbless))))
-Limbless.padless.fossilized <-as.factor(c(setNames("0","ROOT"),
-                                 setNames(as.character(toepads.Limbless),names(toepads.Limbless))))
+Standard.arboreal.strict.fossilized <-as.factor(c(setNames("not.arboreal","ROOT"),
+                                  setNames(as.character(arboreal.strict.Standard),names(arboreal.strict.Standard))))
+Standard.padless.fossilized <-as.factor(c(setNames("0","ROOT"),
+                                 setNames(as.character(toepads.Standard),names(toepads.Standard))))
 
-#fit fixed-root models for Strict Limbless dataset
+#fit fixed-root models for Strict Standard dataset
 
 ##ARD
 
 ## Dependent y model
-strict.Limbless.fit.fixed.dep.y.ARD<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="y",model="ARD") #strict
+strict.Standard.fit.fixed.dep.y.ARD<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.strict.fossilized,dep.var="y",model="ARD") #strict
 
 ## Dependent x model
-strict.Limbless.fit.fixed.dep.x.ARD <-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="x",model="ARD") #strict
+strict.Standard.fit.fixed.dep.x.ARD <-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.strict.fossilized,dep.var="x",model="ARD") #strict
 
 ## Interdependent model
-strict.Limbless.fit.fixed.dep.xy.ARD<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="xy",model="ARD") #strict
+strict.Standard.fit.fixed.dep.xy.ARD<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.strict.fossilized,dep.var="xy",model="ARD") #strict
 
-## SYM
-
-## Dependent y model
-strict.Limbless.fit.fixed.dep.y.SYM<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="y",model="SYM") #strict
-
-## Dependent x model
-strict.Limbless.fit.fixed.dep.x.SYM <-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="x",model="SYM") #strict
-
-## Interdependent model
-strict.Limbless.fit.fixed.dep.xy.SYM<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="xy",model="SYM") #strict
 
 ## ER
 
 ## Dependent y model
-strict.Limbless.fit.fixed.dep.y.ER<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="y",model="ER") #strict
+strict.Standard.fit.fixed.dep.y.ER<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.strict.fossilized,dep.var="y",model="ER") #strict
 
 ## Dependent x model
-strict.Limbless.fit.fixed.dep.x.ER <-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="x",model="ER") #strict
+strict.Standard.fit.fixed.dep.x.ER <-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.strict.fossilized,dep.var="x",model="ER") #strict
 
 ## Interdependent model
-strict.Limbless.fit.fixed.dep.xy.ER<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.strict.fossilized,dep.var="xy",model="ER") #strict
+strict.Standard.fit.fixed.dep.xy.ER<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.strict.fossilized,dep.var="xy",model="ER") #strict
 
-strict.Limbless.aic <-setNames(c(strict.Limbless.fit.fixed.dep.y.ARD$dependent.AIC,
-                                  strict.Limbless.fit.fixed.dep.x.ARD$dependent.AIC,
-                                  strict.Limbless.fit.fixed.dep.xy.ARD$dependent.AIC,
-                                  strict.Limbless.fit.fixed.dep.y.ER$dependent.AIC,
-                                  strict.Limbless.fit.fixed.dep.x.ER$dependent.AIC,
-                                  strict.Limbless.fit.fixed.dep.xy.ER$dependent.AIC),
+strict.Standard.aic <-setNames(c(strict.Standard.fit.fixed.dep.y.ARD$dependent.AIC,
+                                  strict.Standard.fit.fixed.dep.x.ARD$dependent.AIC,
+                                  strict.Standard.fit.fixed.dep.xy.ARD$dependent.AIC,
+                                  strict.Standard.fit.fixed.dep.y.ER$dependent.AIC,
+                                  strict.Standard.fit.fixed.dep.x.ER$dependent.AIC,
+                                  strict.Standard.fit.fixed.dep.xy.ER$dependent.AIC),
                                 c("ARD dependent y",
                                   "ARD dependent x",
                                   "ARD dependent x&y",
@@ -88,78 +80,58 @@ strict.Limbless.aic <-setNames(c(strict.Limbless.fit.fixed.dep.y.ARD$dependent.A
                                   "ER dependent x",
                                   "ER dependent x&y"))
 
-print(strict.Limbless.aic)
-aicw(strict.Limbless.aic)
-
-plot(strict.Limbless.fit.fixed.dep.xy.ARD)
+print(strict.Standard.aic)
+strict.Standard.aicw <- aicw(strict.Standard.aic)
+as.data.frame(strict.Standard.aicw$w)
+plot(strict.Standard.fit.fixed.dep.xy.ARD)
 ##################################
 ######                      ######
-######  Relaxed "Limbless"  ######
+######  Relaxed "Standard"  ######
 ######                      ######
 ##################################
 
 ## Add fossilized root states
-arboreal.relaxed.Limbless<-as.factor(setNames(LimblessDataset[,5],rownames(LimblessDataset)))
+arboreal.relaxed.Standard<-as.factor(setNames(StandardDataset[,5],rownames(StandardDataset)))
 
-Limbless.arboreal.relaxed.fossilized <-as.factor(c(setNames("not.arboreal","ROOT"),
-                                                  setNames(as.character(arboreal.relaxed.Limbless),names(arboreal.relaxed.Limbless))))
+Standard.arboreal.relaxed.fossilized <-as.factor(c(setNames("not.arboreal","ROOT"),
+                                                  setNames(as.character(arboreal.relaxed.Standard),names(arboreal.relaxed.Standard))))
 
-## Fit fixed-root models for Relaxed Limbless dataset
+## Fit fixed-root models for Standard Relaxed dataset
 
 ## ARD
 
 ## Dependent y model
-relaxed.Limbless.fit.fixed.dep.y.ARD<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="y",model="ARD") #strict
+relaxed.Standard.fit.fixed.dep.y.ARD<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.relaxed.fossilized,dep.var="y",model="ARD") #strict
 
-#relaxed.Limbless.fit.fixed.dep.y.ARD
-#plot(relaxed.Limbless.fit.fixed.dep.y.ARD)
-#title("relaxed.Limbless.fit.fixed.dep.y.ARD")
-
-## Dependent x model
-relaxed.Limbless.fit.fixed.dep.x.ARD <-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="x",model="ARD") #strict
-
-## Interdependent model
-relaxed.Limbless.fit.fixed.dep.xy.ARD<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="xy",model="ARD") #strict
-
-## SYM
-
-## Dependent y model
-relaxed.Limbless.fit.fixed.dep.y.SYM<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="y",model="SYM") #strict
+#relaxed.Standard.fit.fixed.dep.y.ARD
+#plot(relaxed.Standard.fit.fixed.dep.y.ARD)
+#title("relaxed.Standard.fit.fixed.dep.y.ARD")
 
 ## Dependent x model
-relaxed.Limbless.fit.fixed.dep.x.SYM <-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="x",model="SYM") #strict
+relaxed.Standard.fit.fixed.dep.x.ARD <-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.relaxed.fossilized,dep.var="x",model="ARD") #strict
 
 ## Interdependent model
-relaxed.Limbless.fit.fixed.dep.xy.SYM<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="xy",model="SYM") #strict
+relaxed.Standard.fit.fixed.dep.xy.ARD<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.relaxed.fossilized,dep.var="xy",model="ARD") #strict
 
 ## ER
 
 ## Dependent y model
-relaxed.Limbless.fit.fixed.dep.y.ER<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="y",model="ER") #strict
+relaxed.Standard.fit.fixed.dep.y.ER<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.relaxed.fossilized,dep.var="y",model="ER") #strict
 
 ## Dependent x model
-relaxed.Limbless.fit.fixed.dep.x.ER <-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="x",model="ER") #strict
+relaxed.Standard.fit.fixed.dep.x.ER <-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.relaxed.fossilized,dep.var="x",model="ER") #strict
 
 ## Interdependent model
-relaxed.Limbless.fit.fixed.dep.xy.ER<-fitPagel(Limbless.tree.root,Limbless.padless.fossilized,Limbless.arboreal.relaxed.fossilized,dep.var="xy",model="ER") #strict
+relaxed.Standard.fit.fixed.dep.xy.ER<-fitPagel(Standard.tree.root,Standard.padless.fossilized,Standard.arboreal.relaxed.fossilized,dep.var="xy",model="ER") #strict
 
-## Organize for AIC scores
+## Organize AIC scores
 
-relaxed.Limbless.ER.aic <-setNames(c(relaxed.Limbless.fit.fixed.dep.y.ER$dependent.AIC,
-                                    relaxed.Limbless.fit.fixed.dep.x.ER$dependent.AIC,
-                                    relaxed.Limbless.fit.fixed.dep.xy.ER$dependent.AIC),
-                                  c("dependent y",
-                                    "dependent x","dependent x&y"))
-relaxed.Limbless.ER.aic
-aic.w(relaxed.Limbless.ER.aic)
-
-
-relaxed.Limbless.aic <-setNames(c(relaxed.Limbless.fit.fixed.dep.y.ARD$dependent.AIC,
-                                     relaxed.Limbless.fit.fixed.dep.x.ARD$dependent.AIC,
-                                     relaxed.Limbless.fit.fixed.dep.xy.ARD$dependent.AIC,
-                                     relaxed.Limbless.fit.fixed.dep.y.ER$dependent.AIC,
-                                     relaxed.Limbless.fit.fixed.dep.x.ER$dependent.AIC,
-                                     relaxed.Limbless.fit.fixed.dep.xy.ER$dependent.AIC),
+relaxed.Standard.aic <-setNames(c(relaxed.Standard.fit.fixed.dep.y.ARD$dependent.AIC,
+                                     relaxed.Standard.fit.fixed.dep.x.ARD$dependent.AIC,
+                                     relaxed.Standard.fit.fixed.dep.xy.ARD$dependent.AIC,
+                                     relaxed.Standard.fit.fixed.dep.y.ER$dependent.AIC,
+                                     relaxed.Standard.fit.fixed.dep.x.ER$dependent.AIC,
+                                     relaxed.Standard.fit.fixed.dep.xy.ER$dependent.AIC),
                                    c("ARD dependent y",
                                      "ARD dependent x",
                                      "ARD dependent x&y",
@@ -167,10 +139,11 @@ relaxed.Limbless.aic <-setNames(c(relaxed.Limbless.fit.fixed.dep.y.ARD$dependent
                                      "ER dependent x",
                                      "ER dependent x&y"))
 
-print(relaxed.Limbless.aic)
-aicw(relaxed.Limbless.aic)
-
-plot(relaxed.Limbless.fit.fixed.dep.y.ARD)
+print(relaxed.Standard.aic)
+aicw(relaxed.Standard.aic)
+relaxed.Standard.aicw <- aicw(relaxed.Standard.aic)
+as.data.frame(relaxed.Standard.aicw$w)
+plot(relaxed.Standard.fit.fixed.dep.y.ARD)
 ##################################
 ######                      ######
 ######   Strict "Full"      ######
@@ -178,18 +151,18 @@ plot(relaxed.Limbless.fit.fixed.dep.y.ARD)
 ##################################
 
 #Full trait dataset
-FullDataset<- read.csv("Meiri_Pyron_2692_5Dec20_ForAnalysis.csv", row.names = 1)
+FullDataset<- read.csv("FullDataset_MeiriData.csv", row.names = 1)
 
 #Full phylogeny
-FullTree <- read.nexus(file = "pruned.tree.Meiri.RevisedPyron.tre")
+FullTree <- read.nexus(file = "FullTree.tre")
 
 ## Add tip of zero-length to the root using "bind.tip" and then assigning it non-arboreal and padless
 Full.tree.root <-bind.tip(FullTree,tip.label="ROOT",edge.length=0,
                               where=Ntip(FullTree)+1)
 #plotTree(Full.tree.root,ftype="off",lwd=1)
 nnF<-which(Full.tree.root$tip.label=="ROOT")
-tiplabels(Full.tree.root$tip.label[nnF],nnF,adj=c(-0.1,0.5),
-          frame="none",cex=0.8,font=3)
+#tiplabels(Full.tree.root$tip.label[nnF],nnF,adj=c(-0.1,0.5),
+#          frame="none",cex=0.8,font=3)
 
 ## Add fossilized root states
 arboreal.strict.Full<-as.factor(setNames(FullDataset[,4],rownames(FullDataset)))
@@ -200,7 +173,7 @@ Full.arboreal.strict.fossilized <-as.factor(c(setNames("not.arboreal","ROOT"),
 Full.padless.fossilized <-as.factor(c(setNames("0","ROOT"),
                                           setNames(as.character(toepads.Full),names(toepads.Full))))
 
-#fit fixed-root models for Strict Limbless dataset
+#fit fixed-root models for Strict Standard dataset
 
 ##ARD
 
@@ -212,17 +185,6 @@ strict.Full.fit.fixed.dep.x.ARD <-fitPagel(Full.tree.root,Full.padless.fossilize
 
 ## Interdependent model
 strict.Full.fit.fixed.dep.xy.ARD<-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.strict.fossilized,dep.var="xy",model="ARD") #strict
-
-## SYM
-
-## Dependent y model
-strict.Full.fit.fixed.dep.y.SYM<-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.strict.fossilized,dep.var="y",model="SYM") #strict
-
-## Dependent x model
-strict.Full.fit.fixed.dep.x.SYM <-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.strict.fossilized,dep.var="x",model="SYM") #strict
-
-## Interdependent model
-strict.Full.fit.fixed.dep.xy.SYM<-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.strict.fossilized,dep.var="xy",model="SYM") #strict
 
 ## ER
 
@@ -250,6 +212,8 @@ strict.Full.aic <-setNames(c(strict.Full.fit.fixed.dep.y.ARD$dependent.AIC,
 
 print(strict.Full.aic)
 aicw(strict.Full.aic)
+strict.Full.aicw <- aicw(strict.Full.aic)
+as.data.frame(strict.Full.aicw$w)
 plot(strict.Full.fit.fixed.dep.xy.ARD) #Best Strict Full model
 ##################################
 ######                      ######
@@ -275,17 +239,6 @@ relaxed.Full.fit.fixed.dep.x.ARD <-fitPagel(Full.tree.root,Full.padless.fossiliz
 
 ## Interdependent model
 relaxed.Full.fit.fixed.dep.xy.ARD<-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.relaxed.fossilized,dep.var="xy",model="ARD") #relaxed
-
-## SYM
-
-## Dependent y model
-relaxed.Full.fit.fixed.dep.y.SYM<-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.relaxed.fossilized,dep.var="y",model="SYM") #relaxed
-
-## Dependent x model
-relaxed.Full.fit.fixed.dep.x.SYM <-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.relaxed.fossilized,dep.var="x",model="SYM") #relaxed
-
-## Interdependent model
-relaxed.Full.fit.fixed.dep.xy.SYM<-fitPagel(Full.tree.root,Full.padless.fossilized,Full.arboreal.relaxed.fossilized,dep.var="xy",model="SYM") #relaxed
 
 ## ER
 
@@ -313,6 +266,8 @@ relaxed.Full.aic <-setNames(c(relaxed.Full.fit.fixed.dep.y.ARD$dependent.AIC,
 
 print(relaxed.Full.aic)
 aicw(relaxed.Full.aic)
+relaxed.Full.aicw <- aicw(relaxed.Full.aic)
+as.data.frame(relaxed.Full.aicw$w)
 plot(relaxed.Full.fit.fixed.dep.xy.ARD) #Best Relaxed Full Model
 
 ## Plot results with ggplot2
@@ -328,6 +283,7 @@ relaxed.Full.fit.fixed.dep.x.ER.Q <- as.data.frame(t(as.matrix(relaxed.Full.fit.
 relaxed.Full.fit.fixed.dep.xy.ER.Q <- as.data.frame(t(as.matrix(relaxed.Full.fit.fixed.dep.xy.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
 
 ##To export table with labels
+
 #relaxed.Full.fit.fixed.dep.y.ARD.Q <- setnames(relaxed.Full.fit.fixed.dep.y.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
 #relaxed.Full.fit.fixed.dep.x.ARD.Q <- setnames(relaxed.Full.fit.fixed.dep.x.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
 #relaxed.Full.fit.fixed.dep.xy.ARD.Q <- setnames(relaxed.Full.fit.fixed.dep.xy.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
@@ -383,7 +339,6 @@ Relaxed.Full.Q.Export$AIC<-Relaxed.Full.AIC
 setDT(Relaxed.Full.Q, keep.rownames = TRUE)
 colnames(Relaxed.Full.Q)[1] <- "Model"
 
-library(reshape2)
 Relaxed.Full.Q.Melted <- melt((Relaxed.Full.Q))
 
 Relaxed.Full.Q.Melted.level.order <- factor(Relaxed.Full.Q.Melted$variable, level = c('PadlessNonArboreal.PadbearingNonArboreal',
@@ -473,7 +428,6 @@ strict.Full.Q <-as.data.frame(strict.Full.Q, row.names = c("ARD dependent y",
 setDT(strict.Full.Q, keep.rownames = TRUE)
 colnames(strict.Full.Q)[1] <- "Model"
 
-library(reshape2)
 strict.Full.Q.Melted <- melt((strict.Full.Q))
 
 strict.Full.Q.Melted.level.order <- factor(strict.Full.Q.Melted$variable, level = c('PadlessNonArboreal.PadbearingNonArboreal',
@@ -496,65 +450,65 @@ dev.size("in") #[1] 10.77778  5.87500
 
 #Strict Standard
 
-strict.Limbless.fit.fixed.dep.y.ARD.Q <- as.data.frame(t(as.matrix(strict.Limbless.fit.fixed.dep.y.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-strict.Limbless.fit.fixed.dep.x.ARD.Q <- as.data.frame(t(as.matrix(strict.Limbless.fit.fixed.dep.x.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-strict.Limbless.fit.fixed.dep.xy.ARD.Q <- as.data.frame(t(as.matrix(strict.Limbless.fit.fixed.dep.xy.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-strict.Limbless.fit.fixed.dep.y.ER.Q <- as.data.frame(t(as.matrix(strict.Limbless.fit.fixed.dep.y.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-strict.Limbless.fit.fixed.dep.x.ER.Q <- as.data.frame(t(as.matrix(strict.Limbless.fit.fixed.dep.x.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-strict.Limbless.fit.fixed.dep.xy.ER.Q <- as.data.frame(t(as.matrix(strict.Limbless.fit.fixed.dep.xy.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+strict.Standard.fit.fixed.dep.y.ARD.Q <- as.data.frame(t(as.matrix(strict.Standard.fit.fixed.dep.y.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+strict.Standard.fit.fixed.dep.x.ARD.Q <- as.data.frame(t(as.matrix(strict.Standard.fit.fixed.dep.x.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+strict.Standard.fit.fixed.dep.xy.ARD.Q <- as.data.frame(t(as.matrix(strict.Standard.fit.fixed.dep.xy.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+strict.Standard.fit.fixed.dep.y.ER.Q <- as.data.frame(t(as.matrix(strict.Standard.fit.fixed.dep.y.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+strict.Standard.fit.fixed.dep.x.ER.Q <- as.data.frame(t(as.matrix(strict.Standard.fit.fixed.dep.x.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+strict.Standard.fit.fixed.dep.xy.ER.Q <- as.data.frame(t(as.matrix(strict.Standard.fit.fixed.dep.xy.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
 
 ### Table for export
 
-#strict.Limbless.fit.fixed.dep.y.ARD.Q <- setnames(strict.Limbless.fit.fixed.dep.y.ARD.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#strict.Limbless.fit.fixed.dep.x.ARD.Q <- setnames(strict.Limbless.fit.fixed.dep.x.ARD.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#strict.Limbless.fit.fixed.dep.xy.ARD.Q <- setnames(strict.Limbless.fit.fixed.dep.xy.ARD.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#strict.Limbless.fit.fixed.dep.y.ER.Q <- setnames(strict.Limbless.fit.fixed.dep.y.ER.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#strict.Limbless.fit.fixed.dep.x.ER.Q <- setnames(strict.Limbless.fit.fixed.dep.x.ER.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#strict.Limbless.fit.fixed.dep.xy.ER.Q <- setnames(strict.Limbless.fit.fixed.dep.xy.ER.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#strict.Standard.fit.fixed.dep.y.ARD.Q <- setnames(strict.Standard.fit.fixed.dep.y.ARD.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#strict.Standard.fit.fixed.dep.x.ARD.Q <- setnames(strict.Standard.fit.fixed.dep.x.ARD.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#strict.Standard.fit.fixed.dep.xy.ARD.Q <- setnames(strict.Standard.fit.fixed.dep.xy.ARD.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#strict.Standard.fit.fixed.dep.y.ER.Q <- setnames(strict.Standard.fit.fixed.dep.y.ER.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#strict.Standard.fit.fixed.dep.x.ER.Q <- setnames(strict.Standard.fit.fixed.dep.x.ER.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#strict.Standard.fit.fixed.dep.xy.ER.Q <- setnames(strict.Standard.fit.fixed.dep.xy.ER.Q,c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
 #
-#strict.Limbless.Q.export <- rbind(strict.Limbless.fit.fixed.dep.y.ARD.Q,
-#                           strict.Limbless.fit.fixed.dep.x.ARD.Q,
-#                           strict.Limbless.fit.fixed.dep.xy.ARD.Q,
-#                           strict.Limbless.fit.fixed.dep.y.ER.Q,
-#                           strict.Limbless.fit.fixed.dep.x.ER.Q,
-#                           strict.Limbless.fit.fixed.dep.xy.ER.Q)
+#strict.Standard.Q.export <- rbind(strict.Standard.fit.fixed.dep.y.ARD.Q,
+#                           strict.Standard.fit.fixed.dep.x.ARD.Q,
+#                           strict.Standard.fit.fixed.dep.xy.ARD.Q,
+#                           strict.Standard.fit.fixed.dep.y.ER.Q,
+#                           strict.Standard.fit.fixed.dep.x.ER.Q,
+#                           strict.Standard.fit.fixed.dep.xy.ER.Q)
 #
-#strict.Limbless.Q.export <-as.data.frame(strict.Limbless.Q.export, row.names = c("ARD dependent y",
+#strict.Standard.Q.export <-as.data.frame(strict.Standard.Q.export, row.names = c("ARD dependent y",
 #                                                                   "ARD dependent x",
 #                                                                   "ARD dependent x&y",
 #                                                                   "ER dependent y",
 #                                                                   "ER dependent x",
 #                                                                   "ER dependent x&y"))
 #
-#strict.Limbless.AIC <- c(strict.Limbless.fit.fixed.dep.y.ARD$dependent.AIC,
-#                         strict.Limbless.fit.fixed.dep.x.ARD$dependent.AIC,
-#                         strict.Limbless.fit.fixed.dep.xy.ARD$dependent.AIC,
-#                         strict.Limbless.fit.fixed.dep.y.ER$dependent.AIC,
-#                         strict.Limbless.fit.fixed.dep.x.ER$dependent.AIC,
-#                         strict.Limbless.fit.fixed.dep.xy.ER$dependent.AIC)
+#strict.Standard.AIC <- c(strict.Standard.fit.fixed.dep.y.ARD$dependent.AIC,
+#                         strict.Standard.fit.fixed.dep.x.ARD$dependent.AIC,
+#                         strict.Standard.fit.fixed.dep.xy.ARD$dependent.AIC,
+#                         strict.Standard.fit.fixed.dep.y.ER$dependent.AIC,
+#                         strict.Standard.fit.fixed.dep.x.ER$dependent.AIC,
+#                         strict.Standard.fit.fixed.dep.xy.ER$dependent.AIC)
 #
 ### Add in AIC scores
-#strict.Limbless.Q.export$AIC<-strict.Limbless.AIC 
+#strict.Standard.Q.export$AIC<-strict.Standard.AIC 
 #
-#strict.Limbless.Q.export
+#strict.Standard.Q.export
 
 ###
 
-strict.Limbless.fit.fixed.dep.y.ARD.Q <- setnames(strict.Limbless.fit.fixed.dep.y.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-strict.Limbless.fit.fixed.dep.x.ARD.Q <- setnames(strict.Limbless.fit.fixed.dep.x.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-strict.Limbless.fit.fixed.dep.xy.ARD.Q <- setnames(strict.Limbless.fit.fixed.dep.xy.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-strict.Limbless.fit.fixed.dep.y.ER.Q <- setnames(strict.Limbless.fit.fixed.dep.y.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-strict.Limbless.fit.fixed.dep.x.ER.Q <- setnames(strict.Limbless.fit.fixed.dep.x.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-strict.Limbless.fit.fixed.dep.xy.ER.Q <- setnames(strict.Limbless.fit.fixed.dep.xy.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+strict.Standard.fit.fixed.dep.y.ARD.Q <- setnames(strict.Standard.fit.fixed.dep.y.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+strict.Standard.fit.fixed.dep.x.ARD.Q <- setnames(strict.Standard.fit.fixed.dep.x.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+strict.Standard.fit.fixed.dep.xy.ARD.Q <- setnames(strict.Standard.fit.fixed.dep.xy.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+strict.Standard.fit.fixed.dep.y.ER.Q <- setnames(strict.Standard.fit.fixed.dep.y.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+strict.Standard.fit.fixed.dep.x.ER.Q <- setnames(strict.Standard.fit.fixed.dep.x.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+strict.Standard.fit.fixed.dep.xy.ER.Q <- setnames(strict.Standard.fit.fixed.dep.xy.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
 
-strict.Limbless.Q <- rbind(strict.Limbless.fit.fixed.dep.y.ARD.Q,
-                       strict.Limbless.fit.fixed.dep.x.ARD.Q,
-                       strict.Limbless.fit.fixed.dep.xy.ARD.Q,
-                       strict.Limbless.fit.fixed.dep.y.ER.Q,
-                       strict.Limbless.fit.fixed.dep.x.ER.Q,
-                       strict.Limbless.fit.fixed.dep.xy.ER.Q)
+strict.Standard.Q <- rbind(strict.Standard.fit.fixed.dep.y.ARD.Q,
+                       strict.Standard.fit.fixed.dep.x.ARD.Q,
+                       strict.Standard.fit.fixed.dep.xy.ARD.Q,
+                       strict.Standard.fit.fixed.dep.y.ER.Q,
+                       strict.Standard.fit.fixed.dep.x.ER.Q,
+                       strict.Standard.fit.fixed.dep.xy.ER.Q)
 
-strict.Limbless.Q <-as.data.frame(strict.Limbless.Q, row.names = c("ARD dependent y",
+strict.Standard.Q <-as.data.frame(strict.Standard.Q, row.names = c("ARD dependent y",
                                                            "ARD dependent x",
                                                            "ARD dependent x&y",
                                                            "ER dependent y",
@@ -564,13 +518,12 @@ strict.Limbless.Q <-as.data.frame(strict.Limbless.Q, row.names = c("ARD dependen
 
 
 ## Finalize table
-setDT(strict.Limbless.Q, keep.rownames = TRUE)
-colnames(strict.Limbless.Q)[1] <- "Model"
+setDT(strict.Standard.Q, keep.rownames = TRUE)
+colnames(strict.Standard.Q)[1] <- "Model"
 
-library(reshape2)
-strict.Limbless.Q.Melted <- melt((strict.Limbless.Q))
+strict.Standard.Q.Melted <- melt((strict.Standard.Q))
 
-strict.Limbless.Q.Melted.level.order <- factor(strict.Limbless.Q.Melted$variable, level = c('PadlessNonArboreal.PadbearingNonArboreal',
+strict.Standard.Q.Melted.level.order <- factor(strict.Standard.Q.Melted$variable, level = c('PadlessNonArboreal.PadbearingNonArboreal',
                                                                                               'PadlessArboreal.PadbearingArboreal',
                                                                                               'PadbearingArboreal.PadlessArboreal',
                                                                                               'PadbearingNonArboreal.PadlessNonArboreal',
@@ -579,7 +532,7 @@ strict.Limbless.Q.Melted.level.order <- factor(strict.Limbless.Q.Melted$variable
                                                                                               'PadlessArboreal.PadlessNonArboreal', 
                                                                                               'PadbearingNonArboreal.PadbearingArboreal'))
 
-Strict.Standard.Q.Jitter <-ggplot(strict.Limbless.Q.Melted, aes(x = strict.Limbless.Q.Melted.level.order, y = value))+ geom_jitter(aes(color = Model), 
+Strict.Standard.Q.Jitter <-ggplot(strict.Standard.Q.Melted, aes(x = strict.Standard.Q.Melted.level.order, y = value))+ geom_jitter(aes(color = Model), 
                                                                         position = position_jitter(0), size = 2.5) +
   xlab("") + ylab("Transition Rate")+ggtitle("Strict Standard Dataset: Pagel")+
   stat_summary(aes(color = value), size = 0.3,
@@ -589,67 +542,67 @@ dev.size("in") #[1] 10.77778  5.87500
 
 #Relaxed Standard
 
-relaxed.Limbless.fit.fixed.dep.y.ARD.Q <- as.data.frame(t(as.matrix(relaxed.Limbless.fit.fixed.dep.y.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-relaxed.Limbless.fit.fixed.dep.x.ARD.Q <- as.data.frame(t(as.matrix(relaxed.Limbless.fit.fixed.dep.x.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-relaxed.Limbless.fit.fixed.dep.xy.ARD.Q <- as.data.frame(t(as.matrix(relaxed.Limbless.fit.fixed.dep.xy.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-relaxed.Limbless.fit.fixed.dep.y.ER.Q <- as.data.frame(t(as.matrix(relaxed.Limbless.fit.fixed.dep.y.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-relaxed.Limbless.fit.fixed.dep.x.ER.Q <- as.data.frame(t(as.matrix(relaxed.Limbless.fit.fixed.dep.x.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
-relaxed.Limbless.fit.fixed.dep.xy.ER.Q <- as.data.frame(t(as.matrix(relaxed.Limbless.fit.fixed.dep.xy.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+relaxed.Standard.fit.fixed.dep.y.ARD.Q <- as.data.frame(t(as.matrix(relaxed.Standard.fit.fixed.dep.y.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+relaxed.Standard.fit.fixed.dep.x.ARD.Q <- as.data.frame(t(as.matrix(relaxed.Standard.fit.fixed.dep.x.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+relaxed.Standard.fit.fixed.dep.xy.ARD.Q <- as.data.frame(t(as.matrix(relaxed.Standard.fit.fixed.dep.xy.ARD$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+relaxed.Standard.fit.fixed.dep.y.ER.Q <- as.data.frame(t(as.matrix(relaxed.Standard.fit.fixed.dep.y.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+relaxed.Standard.fit.fixed.dep.x.ER.Q <- as.data.frame(t(as.matrix(relaxed.Standard.fit.fixed.dep.x.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
+relaxed.Standard.fit.fixed.dep.xy.ER.Q <- as.data.frame(t(as.matrix(relaxed.Standard.fit.fixed.dep.xy.ER$dependent.Q[c(2,3,5,8,9,12,14,15)])))
 
 #Export table
-#relaxed.Limbless.fit.fixed.dep.y.ARD.Q <- setnames(relaxed.Limbless.fit.fixed.dep.y.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#relaxed.Limbless.fit.fixed.dep.x.ARD.Q <- setnames(relaxed.Limbless.fit.fixed.dep.x.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#relaxed.Limbless.fit.fixed.dep.xy.ARD.Q <- setnames(relaxed.Limbless.fit.fixed.dep.xy.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#relaxed.Limbless.fit.fixed.dep.y.ER.Q <- setnames(relaxed.Limbless.fit.fixed.dep.y.ER.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#relaxed.Limbless.fit.fixed.dep.x.ER.Q <- setnames(relaxed.Limbless.fit.fixed.dep.x.ER.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-#relaxed.Limbless.fit.fixed.dep.xy.ER.Q <- setnames(relaxed.Limbless.fit.fixed.dep.xy.ER.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#relaxed.Standard.fit.fixed.dep.y.ARD.Q <- setnames(relaxed.Standard.fit.fixed.dep.y.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#relaxed.Standard.fit.fixed.dep.x.ARD.Q <- setnames(relaxed.Standard.fit.fixed.dep.x.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#relaxed.Standard.fit.fixed.dep.xy.ARD.Q <- setnames(relaxed.Standard.fit.fixed.dep.xy.ARD.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#relaxed.Standard.fit.fixed.dep.y.ER.Q <- setnames(relaxed.Standard.fit.fixed.dep.y.ER.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#relaxed.Standard.fit.fixed.dep.x.ER.Q <- setnames(relaxed.Standard.fit.fixed.dep.x.ER.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+#relaxed.Standard.fit.fixed.dep.xy.ER.Q <- setnames(relaxed.Standard.fit.fixed.dep.xy.ER.Q, c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
 #
 #
-#relaxed.Limbless.Q.export <- rbind(relaxed.Limbless.fit.fixed.dep.y.ARD.Q,
-#                            relaxed.Limbless.fit.fixed.dep.x.ARD.Q,
-#                            relaxed.Limbless.fit.fixed.dep.xy.ARD.Q,
-#                            relaxed.Limbless.fit.fixed.dep.y.ER.Q,
-#                            relaxed.Limbless.fit.fixed.dep.x.ER.Q,
-#                            relaxed.Limbless.fit.fixed.dep.xy.ER.Q)
+#relaxed.Standard.Q.export <- rbind(relaxed.Standard.fit.fixed.dep.y.ARD.Q,
+#                            relaxed.Standard.fit.fixed.dep.x.ARD.Q,
+#                            relaxed.Standard.fit.fixed.dep.xy.ARD.Q,
+#                            relaxed.Standard.fit.fixed.dep.y.ER.Q,
+#                            relaxed.Standard.fit.fixed.dep.x.ER.Q,
+#                            relaxed.Standard.fit.fixed.dep.xy.ER.Q)
 #
-#relaxed.Limbless.Q.export <-as.data.frame(relaxed.Limbless.Q.export, row.names = c("ARD dependent y",
+#relaxed.Standard.Q.export <-as.data.frame(relaxed.Standard.Q.export, row.names = c("ARD dependent y",
 #                                                                     "ARD dependent x",
 #                                                                     "ARD dependent x&y",
 #                                                                     "ER dependent y",
 #                                                                     "ER dependent x",
 #                                                                     "ER dependent x&y"))
 #
-#relaxed.Limbless.AIC <- c(relaxed.Limbless.fit.fixed.dep.y.ARD$dependent.AIC,
-#                          relaxed.Limbless.fit.fixed.dep.x.ARD$dependent.AIC,
-#                          relaxed.Limbless.fit.fixed.dep.xy.ARD$dependent.AIC,
-#                          relaxed.Limbless.fit.fixed.dep.y.ER$dependent.AIC,
-#                          relaxed.Limbless.fit.fixed.dep.x.ER$dependent.AIC,
-#                          relaxed.Limbless.fit.fixed.dep.xy.ER$dependent.AIC)
+#relaxed.Standard.AIC <- c(relaxed.Standard.fit.fixed.dep.y.ARD$dependent.AIC,
+#                          relaxed.Standard.fit.fixed.dep.x.ARD$dependent.AIC,
+#                          relaxed.Standard.fit.fixed.dep.xy.ARD$dependent.AIC,
+#                          relaxed.Standard.fit.fixed.dep.y.ER$dependent.AIC,
+#                          relaxed.Standard.fit.fixed.dep.x.ER$dependent.AIC,
+#                          relaxed.Standard.fit.fixed.dep.xy.ER$dependent.AIC)
 #
 #
 #
 ### Add in AIC scores
-#relaxed.Limbless.Q.export$AIC<-relaxed.Limbless.AIC 
+#relaxed.Standard.Q.export$AIC<-relaxed.Standard.AIC 
 #
-#relaxed.Limbless.Q.export
+#relaxed.Standard.Q.export
 
 #####
 
-relaxed.Limbless.fit.fixed.dep.y.ARD.Q <- setnames(relaxed.Limbless.fit.fixed.dep.y.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-relaxed.Limbless.fit.fixed.dep.x.ARD.Q <- setnames(relaxed.Limbless.fit.fixed.dep.x.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-relaxed.Limbless.fit.fixed.dep.xy.ARD.Q <- setnames(relaxed.Limbless.fit.fixed.dep.xy.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-relaxed.Limbless.fit.fixed.dep.y.ER.Q <- setnames(relaxed.Limbless.fit.fixed.dep.y.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-relaxed.Limbless.fit.fixed.dep.x.ER.Q <- setnames(relaxed.Limbless.fit.fixed.dep.x.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
-relaxed.Limbless.fit.fixed.dep.xy.ER.Q <- setnames(relaxed.Limbless.fit.fixed.dep.xy.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+relaxed.Standard.fit.fixed.dep.y.ARD.Q <- setnames(relaxed.Standard.fit.fixed.dep.y.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+relaxed.Standard.fit.fixed.dep.x.ARD.Q <- setnames(relaxed.Standard.fit.fixed.dep.x.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+relaxed.Standard.fit.fixed.dep.xy.ARD.Q <- setnames(relaxed.Standard.fit.fixed.dep.xy.ARD.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+relaxed.Standard.fit.fixed.dep.y.ER.Q <- setnames(relaxed.Standard.fit.fixed.dep.y.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+relaxed.Standard.fit.fixed.dep.x.ER.Q <- setnames(relaxed.Standard.fit.fixed.dep.x.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
+relaxed.Standard.fit.fixed.dep.xy.ER.Q <- setnames(relaxed.Standard.fit.fixed.dep.xy.ER.Q, old = c('V1','V2','V3','V4','V5','V6','V7','V8'), new = c("PadlessNonArboreal.PadlessArboreal","PadbearingArboreal.PadlessArboreal", "PadlessArboreal.PadlessNonArboreal","PadbearingNonArboreal.PadlessNonArboreal","PadlessArboreal.PadbearingArboreal","PadbearingNonArboreal.PadbearingArboreal","PadlessNonArboreal.PadbearingNonArboreal","PadbearingArboreal.PadbearingNonArboreal"))
 
-relaxed.Limbless.Q <- rbind(relaxed.Limbless.fit.fixed.dep.y.ARD.Q,
-                           relaxed.Limbless.fit.fixed.dep.x.ARD.Q,
-                           relaxed.Limbless.fit.fixed.dep.xy.ARD.Q,
-                           relaxed.Limbless.fit.fixed.dep.y.ER.Q,
-                           relaxed.Limbless.fit.fixed.dep.x.ER.Q,
-                           relaxed.Limbless.fit.fixed.dep.xy.ER.Q)
+relaxed.Standard.Q <- rbind(relaxed.Standard.fit.fixed.dep.y.ARD.Q,
+                           relaxed.Standard.fit.fixed.dep.x.ARD.Q,
+                           relaxed.Standard.fit.fixed.dep.xy.ARD.Q,
+                           relaxed.Standard.fit.fixed.dep.y.ER.Q,
+                           relaxed.Standard.fit.fixed.dep.x.ER.Q,
+                           relaxed.Standard.fit.fixed.dep.xy.ER.Q)
 
-relaxed.Limbless.Q <-as.data.frame(relaxed.Limbless.Q, row.names = c("ARD dependent y",
+relaxed.Standard.Q <-as.data.frame(relaxed.Standard.Q, row.names = c("ARD dependent y",
                                                                    "ARD dependent x",
                                                                    "ARD dependent x&y",
                                                                    "ER dependent y",
@@ -657,13 +610,12 @@ relaxed.Limbless.Q <-as.data.frame(relaxed.Limbless.Q, row.names = c("ARD depend
                                                                    "ER dependent x&y"))
 
 ## Finalize table
-setDT(relaxed.Limbless.Q, keep.rownames = TRUE)
-colnames(relaxed.Limbless.Q)[1] <- "Model"
+setDT(relaxed.Standard.Q, keep.rownames = TRUE)
+colnames(relaxed.Standard.Q)[1] <- "Model"
 
-library(reshape2)
-relaxed.Limbless.Q.Melted <- melt((relaxed.Limbless.Q))
+relaxed.Standard.Q.Melted <- melt((relaxed.Standard.Q))
 
-relaxed.Limbless.Q.Melted.level.order <- factor(relaxed.Limbless.Q.Melted$variable, level = c('PadlessNonArboreal.PadbearingNonArboreal',
+relaxed.Standard.Q.Melted.level.order <- factor(relaxed.Standard.Q.Melted$variable, level = c('PadlessNonArboreal.PadbearingNonArboreal',
                                                                                               'PadlessArboreal.PadbearingArboreal',
                                                                                               'PadbearingArboreal.PadlessArboreal',
                                                                                               'PadbearingNonArboreal.PadlessNonArboreal',
@@ -673,7 +625,7 @@ relaxed.Limbless.Q.Melted.level.order <- factor(relaxed.Limbless.Q.Melted$variab
                                                                                               'PadbearingNonArboreal.PadbearingArboreal'))
 
 
-Relaxed.Standard.Q.Jitter <- ggplot(relaxed.Limbless.Q.Melted, aes(x = relaxed.Limbless.Q.Melted.level.order, y = value))+ geom_jitter(aes(color = Model), 
+Relaxed.Standard.Q.Jitter <- ggplot(relaxed.Standard.Q.Melted, aes(x = relaxed.Standard.Q.Melted.level.order, y = value))+ geom_jitter(aes(color = Model), 
                                                                             position = position_jitter(0), size = 2.5) +
   xlab("") + ylab("Transition Rate")+ggtitle("Relaxed Standard Dataset: Pagel")+
   stat_summary(aes(color = value), size = 0.3,
@@ -682,7 +634,7 @@ Relaxed.Standard.Q.Jitter <- ggplot(relaxed.Limbless.Q.Melted, aes(x = relaxed.L
 dev.size("in") #[1] 10.77778  5.87500
 
 
-## Together all
+## All together
 ggarrange(
   Strict.Standard.Q.Jitter,Relaxed.Standard.Q.Jitter, Strict.Full.Q.Jitter, Relaxed.Full.Q.Jitter, labels = c("A", "B", "C", "D"),
   common.legend = TRUE, legend = "top")
@@ -690,8 +642,8 @@ together + rremove("ggtitle")
 
 ## Only best-fitting models from the four dataset
 
-Best.Models.Pagel.Q <- rbind(strict.Limbless.fit.fixed.dep.xy.ARD.Q,
-                            relaxed.Limbless.fit.fixed.dep.y.ARD.Q,
+Best.Models.Pagel.Q <- rbind(strict.Standard.fit.fixed.dep.xy.ARD.Q,
+                            relaxed.Standard.fit.fixed.dep.y.ARD.Q,
                             strict.Full.fit.fixed.dep.xy.ARD.Q,
                             relaxed.Full.fit.fixed.dep.xy.ARD.Q)
 
@@ -699,23 +651,24 @@ Best.Models.Pagel.Q <-as.data.frame(Best.Models.Pagel.Q, row.names = c("Standard
                                                                      "Standard Relaxed",
                                                                      "Full Strict",
                                                                      "Full Relaxed"))
-#Add p-values and AIC scores 
+#Add p-values and AIC scores for table
 Best.Models.Pagel.Q.export <- Best.Models.Pagel.Q
-Best.Models.Pagel.Q.export$p.value <-  rbind(strict.Limbless.fit.fixed.dep.xy.ARD$P[1],
-                                      relaxed.Limbless.fit.fixed.dep.y.ARD$P[1],
+Best.Models.Pagel.Q.export$p.value <-  rbind(strict.Standard.fit.fixed.dep.xy.ARD$P[1],
+                                      relaxed.Standard.fit.fixed.dep.y.ARD$P[1],
                                       strict.Full.fit.fixed.dep.xy.ARD$P[1],
                                       relaxed.Full.fit.fixed.dep.xy.ARD$P[1])
 
-Best.Models.Pagel.Q.export$log.lik <-  rbind(strict.Limbless.fit.fixed.dep.xy.ARD$dependent.logL[1],
-                                             relaxed.Limbless.fit.fixed.dep.y.ARD$dependent.logL[1],
+Best.Models.Pagel.Q.export$log.lik <-  rbind(strict.Standard.fit.fixed.dep.xy.ARD$dependent.logL[1],
+                                             relaxed.Standard.fit.fixed.dep.y.ARD$dependent.logL[1],
                                              strict.Full.fit.fixed.dep.xy.ARD$dependent.logL[1],
                                              relaxed.Full.fit.fixed.dep.xy.ARD$dependent.logL[1])
-write.csv(Best.Models.Pagel.Q.export, "Best.Models.Pagel.SuppMat.Rates.P.14Feb21.csv")
+
+#write.csv(Best.Models.Pagel.Q.export, "Best.Models.Pagel.SuppMat.Rates.P.14Feb21.csv")
 
 ## Finalize table
 setDT(Best.Models.Pagel.Q, keep.rownames = TRUE)
 colnames(Best.Models.Pagel.Q)[1] <- "Dataset"
-library(reshape2)
+
 Best.Models.Pagel.Q.Melted <- melt((Best.Models.Pagel.Q))
 
 Best.Models.Pagel.Q.Melted.Jitter <- ggplot(Best.Models.Pagel.Q.Melted, aes(x = reorder(variable,value), y = value))+ geom_jitter(aes(color = Dataset), 
@@ -731,93 +684,9 @@ Best.Models.MuHiSSE.Q.Melted.Jitter <- ggplot(Best.Models.MuHiSSE.Q.Melted, aes(
   stat_summary(aes(color = value), size = 0.3,
                fun.data="mean_sdl", alpha=0.7,color="gray70", fun.args = list(mult=1))+ scale_color_manual(values=c( "#000004FF", "#721F81FF", "#CD4071FF", "#FD9567FF"))+theme_classic()+coord_flip()
 
+#### All datasets/models/rates
 
-## Not included-- multiplying rates by the sum of edge lengths to obtain a rough estimate of the number of state transitions
-
-#Pagel converted by branch lengths
-#Best.Models.Pagel.Q.Parameter.Estimates <- Best.Models.Pagel.Q.Parameter %>% column_to_rownames(var="Dataset")
-#Best.Models.Pagel.Q.Parameter.Estimates.Standard <- Best.Models.Pagel.Q.Parameter.Estimates[1:2,]*sum(LimblessTree$edge.length)
-#Best.Models.Pagel.Q.Parameter.Estimates.Full <- Best.Models.Pagel.Q.Parameter.Estimates[3:4,]*sum(FullTree$edge.length)
-#Parameters.Best.Models.Pagel.Q.Combined <- rbind(Best.Models.Pagel.Q.Parameter.Estimates.Standard,
-#                                                 Best.Models.Pagel.Q.Parameter.Estimates.Full)
-#Parameters.Best.Models.Pagel.Q.Combined <- tibble::rownames_to_column(Parameters.Best.Models.Pagel.Q.Combined, "Dataset")
-#Parameters.Best.Models.Pagel.Q.Combined.Melted <- melt((Parameters.Best.Models.Pagel.Q.Combined))
-#
-#Parameters.Best.Models.Pagel.Q.Combined.Melted.Jitter <- ggplot(Parameters.Best.Models.Pagel.Q.Combined.Melted, aes(x = reorder(variable,value), y = value))+ geom_jitter(aes(color = Dataset), 
-#                                                                                                                                  position = position_jitter(0.2), size = 3) +
-#  xlab("") + ylab("Number of Transitions")+ggtitle("Pagel AICw Winners: Converted")+
-#  stat_summary(aes(color = value), size = 0.3,
-#               fun.data="mean_sdl", alpha=0.7,color="gray70", fun.args = list(mult=1))+ scale_color_manual(values=c("#000004FF", "#721F81FF", "#CD4071FF", "#FD9567FF"))+theme_classic()+coord_flip()
-#
-##MuHiSSE converted by branch lengths
-#Best.Models.MuHiSSE <- tibble::rownames_to_column(Best.Models.MuHiSSE, "Dataset")
-#Best.Models.MuHiSSE.Q.Parameter <- Best.Models.MuHiSSE
-#Best.Models.MuHiSSE.Q.Parameter.Estimates <- Best.Models.MuHiSSE.Q.Parameter %>% column_to_rownames(var="Dataset")
-#Best.Models.MuHiSSE.Q.Parameter.Estimates.Standard <- Best.Models.MuHiSSE.Q.Parameter.Estimates[1:2,]*sum(LimblessTree$edge.length)
-#Best.Models.MuHiSSE.Q.Parameter.Estimates.Full <- Best.Models.MuHiSSE.Q.Parameter.Estimates[3:4,]*sum(FullTree$edge.length)
-#Parameters.Best.Models.MuHiSSE.Q.Combined <- rbind(Best.Models.MuHiSSE.Q.Parameter.Estimates.Standard,
-#                                                 Best.Models.MuHiSSE.Q.Parameter.Estimates.Full)
-#Parameters.Best.Models.MuHiSSE.Q.Combined <- tibble::rownames_to_column(Parameters.Best.Models.MuHiSSE.Q.Combined, "Dataset")
-#Parameters.Best.Models.MuHiSSE.Q.Combined.Melted <- melt((Parameters.Best.Models.MuHiSSE.Q.Combined))
-#
-#Parameters.Best.Models.MuHiSSE.Q.Combined.Melted.level.order <- factor(Parameters.Best.Models.MuHiSSE.Q.Combined.Melted$variable, level = c('q00A_01A',
-#                                                                                       'q10A_11A',
-#                                                                                       'q11A_10A',
-#                                                                                       'q01A_00A',
-#                                                                                       'q00A_10A',
-#                                                                                       'q11A_01A',
-#                                                                                       'q01A_11A',
-#                                                                                       'q10A_00A'))
-#
-#
-#Parameters.Best.Models.MuHiSSE.Q.Combined.Melted.Jitter <- ggplot(Parameters.Best.Models.MuHiSSE.Q.Combined.Melted, aes(x=Parameters.Best.Models.MuHiSSE.Q.Combined.Melted.level.order, y =value))+ geom_jitter(aes(color = Dataset), 
-#                                                                                                                                                                          position = position_jitter(0.2), size = 3) +
-#  xlab("") + ylab("Number of Transitions")+ggtitle("MuHiSSE AICw Winners: Converted")+
-#  stat_summary(aes(color = value), size = 0.3,
-#               fun.data="mean_sdl", alpha=0.7,color="gray70", fun.args = list(mult=1))+ scale_color_manual(values=c("#000004FF", "#721F81FF", "#CD4071FF", "#FD9567FF"))+theme_classic()+coord_flip()
-#
-###Together converted parameters
-ggarrange(Best.Models.MuHiSSE.Q.Melted.Jitter+coord_flip(ylim = c(0,0.025)),
-          Best.Models.Pagel.Q.Melted.Jitter+coord_flip(ylim = c(0,0.025)),
-         align = "v",labels = c("A", "B"), ncol = 1, nrow=2, common.legend = TRUE,legend = "top")
-#
-#ggarrange(Parameters.Best.Models.MuHiSSE.Q.Combined.Melted.Jitter+coord_flip(ylim = c(0,1000)),
-#          Parameters.Best.Models.Pagel.Q.Combined.Melted.Jitter+coord_flip(ylim = c(0,1000)),
-#          align = "v",labels = c("A", "B"), ncol = 1, nrow=2,legend = "right")
-
-
-## Compare SSE to fitPagel rate parameters
-compare <- read.csv("MuHiSSEvsPagel.csv")
-compare_transpose <- as.data.frame(t(as.matrix(compare)))
-var_q00._.10_All <- var(as.integer(compare_transpose[2,]))
-var(as.integer(compare_transpose[2,]))
-var(as.integer(compare_transpose[3,]))
-var(as.integer(compare_transpose[4,]))
-var(as.integer(compare_transpose[5,]))
-var(as.integer(compare_transpose[6,]))
-
-View(compare_transpose[2,])
-
-aggregate(compare, list(compare$q00._.10), FUN = var)
-
-
-
-### Aggregate all rates
-relaxed.Limbless.Q.export
-strict.Limbless.Q.export
-strict.Full.Q.export
-Relaxed.Full.Q.Export
-
-write.csv(relaxed.Limbless.Q.export, "Standard_Relaxed_Rates_AllModels.csv")
-write.csv(strict.Limbless.Q.export, "Standard_Strict_Rates_AllModels.csv")
+write.csv(relaxed.Standard.Q.export, "Standard_Relaxed_Rates_AllModels.csv")
+write.csv(strict.Standard.Q.export, "Standard_Strict_Rates_AllModels.csv")
 write.csv(Relaxed.Full.Q.Export, "Full_Relaxed_Rates_AllModels.csv")
 write.csv(strict.Full.Q.export, "Full_Strict_Rates_AllModels.csv")
-
-AllRates_Pagel <- cbind(relaxed.Limbless.Q.export,
-                    strict.Limbless.Q.export,
-                    strict.Full.Q.export,
-                    Relaxed.Full.Q.Export)
-
-
-
-
