@@ -6,6 +6,11 @@ library(ggplot2)
 library(reshape2)
 library(ggpubr)
 
+## For each dataset, conduct the adaptive sampling like such:
+AdaptiveSampling.object <- SupportRegionMuHiSSE(muhisse.obj = x, n.points = 10000, scale.int = 0.1)
+## x = an object of class muhisse.fit that contains the MLE from a model run
+## NOTE: scale.int was changed to 0.05 for the Standard Relaxed dataset owing to efficiency issues.
+
 ## Relaxed Standard
 Relaxed.Standard.MuH.CID8.ci <- as.data.frame(Relaxed.Standard.MuH.CID8.AdaptiveSampling$ci)
 Relaxed.Standard.MuH.CID8.ci <- tibble::rownames_to_column(Relaxed.Standard.MuH.CID8.ci, "Region")
