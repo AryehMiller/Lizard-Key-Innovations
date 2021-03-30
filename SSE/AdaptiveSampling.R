@@ -8,7 +8,7 @@ library(ggpubr)
 
 ## For each dataset, conduct the adaptive sampling like such:
 AdaptiveSampling.object <- SupportRegionMuHiSSE(muhisse.obj = x, n.points = 10000, scale.int = 0.1)
-## x = an object of class muhisse.fit that contains the MLE from a model run
+## x = an object of class muhisse.fit that contains the MLE from a model run-- this analysis should conducted 4x in total, once for each dataset.
 ## NOTE: scale.int was changed to 0.05 for the Standard Relaxed dataset owing to efficiency issues.
 
 ## Relaxed Standard
