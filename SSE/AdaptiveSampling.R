@@ -10,6 +10,8 @@ library(ggpubr)
 AdaptiveSampling.object <- SupportRegionMuHiSSE(muhisse.obj = x, n.points = 10000, scale.int = 0.1)
 Strict.Full.MuH.CID7.AdaptiveSampling <- SupportRegionMuHiSSE(muhisse.obj = Strict.MuH.CID7, n.points = 10000)
 Strict.Standard.MuH.CID5.AdaptiveSampling <- SupportRegionMuHiSSE(muhisse.obj = Strict.Standard.MuH.CID5, n.points = 10000)
+Relaxed.Standard.MuH.CID8.AdaptiveSampling <- SupportRegionMuHiSSE(muhisse.obj = Relaxed.Standard.MuH.CID8, n.points = 10000, scale.int = 0.05)
+
 
 
 ## x = an object of class muhisse.fit that contains the MLE from a model run-- this analysis should conducted 4x in total, once for each dataset.
