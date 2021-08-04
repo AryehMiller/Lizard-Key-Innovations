@@ -7,10 +7,7 @@ library(corHMM)
 library(phytools)
 library(geiger)
 
-#Setwd() to corHMM directory
-setwd("/home/aryehmiller/Projects/Arboreality/corHMM")
-
-#Transition Rates Analysis CorHMM
+#Transition Rates Analysis corHMM
 Full_Strict_Dataset <- read.csv("FullStrict_TraitAnalysis.csv")
 Full_Relaxed_Dataset <- read.csv("FullRelaxed_TraitAnalysis.csv")
 tree <- read.nexus(file = "FullTree.tre")
