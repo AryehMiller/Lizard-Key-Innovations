@@ -7,7 +7,7 @@ library(corHMM)
 library(phytools)
 library(geiger)
 
-#Transition Rates Analysis CorHMM
+#Transition Rates Analysis corHMM
 Standard_Strict_Dataset <- read.csv("StandardStrict_TraitAnalysis.csv")
 Standard_Relaxed_Dataset <- read.csv("StandardRelaxed_TraitAnalysis.csv")
 StandardTree <- read.nexus(file = "StandardTree.tre")
