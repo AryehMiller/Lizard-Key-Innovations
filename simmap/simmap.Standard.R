@@ -101,8 +101,6 @@ ape::tiplabels(pch=21, tip=ii, cex=1.5, col='black',bg="grey")
 ##Liolaemidae
 #arc.cladelabels(text="Liolaemidae",node=findMRCA(StandardTree,c("Ctenoblepharys_adspersa","Liolaemus_ornatus")),
 #                ln.offset=1.03,lab.offset=1.06, orientation = "horizontal",mark.node=FALSE)
-#
-### PICK UP HERE
 ##Opluridae
 #arc.cladelabels(text="Opluridae",node=findMRCA(StandardTree,c("Chalarodon_madagascariensis","Oplurus_grandidieri")),
 #                ln.offset=1.15,lab.offset=1.18,orientation = "horizontal", mark.node=FALSE)
