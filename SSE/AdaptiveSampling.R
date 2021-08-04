@@ -103,41 +103,33 @@ Strict.Standard.MuH.CID5.ci.Rates <- Strict.Standard.MuH.CID5.ci %>% select(cont
 Strict.Standard.MuH.CID5.ci.Rates <- Strict.Standard.MuH.CID5.ci.Rates[, colSums(Strict.Standard.MuH.CID5.ci.Rates != 0) > 0]
 
 ## Categorize into the eight different transitions
-## 00 > 10 DONE
-## 00 > 01 DONE
-## 10 > 00 DONE
-## 01 > 00 DONE
-## 01 > 11 DONE
-## 11 > 01 DONE
-## 11 > 10
-## 10 > 11
 
 ## 1
 Strict.Standard.MuH.CID5.ci.q00.q10 <- Strict.Standard.MuH.CID5.ci.Rates %>% select(contains("00") & contains("10"))
-## q00 > q10
+## q00 > 10
 Strict.Standard.MuH.CID5.ci.Rates.00.10 <- Strict.Standard.MuH.CID5.ci.q00.q10 %>% select(contains("q00"))
-## q10 > q00
+## q10 > 00
 Strict.Standard.MuH.CID5.ci.Rates.10.00 <- Strict.Standard.MuH.CID5.ci.q00.q10 %>% select(contains("q10"))
 
 ## 2
 Strict.Standard.MuH.CID5.ci.Rates.q01q00 <- Strict.Standard.MuH.CID5.ci.Rates %>% select(contains("01") & contains("00"))
-## q00 > q01
+## q00 > 01
 Strict.Standard.MuH.CID5.ci.Rates.00.01 <- Strict.Standard.MuH.CID5.ci.Rates.q01q00 %>% select(contains("q00"))
-## q01 > q00
+## q01 > 00
 Strict.Standard.MuH.CID5.ci.Rates.01.00 <- Strict.Standard.MuH.CID5.ci.Rates.q01q00 %>% select(contains("q01"))
 
 ## 3
 Strict.Standard.MuH.CID5.ci.Rates.q01q11 <- Strict.Standard.MuH.CID5.ci.Rates %>% select(contains("01") & contains("11"))
-## q01 > q11
+## q01 > 11
 Strict.Standard.MuH.CID5.ci.Rates.01.11 <- Strict.Standard.MuH.CID5.ci.Rates.q01q11 %>% select(contains("q01"))
-## q11 > q01
+## q11 > 01
 Strict.Standard.MuH.CID5.ci.Rates.11.01 <- Strict.Standard.MuH.CID5.ci.Rates.q01q11 %>% select(contains("q11"))
 
 ## 4
 Strict.Standard.MuH.CID5.ci.Rates.q10q11 <- Strict.Standard.MuH.CID5.ci.Rates %>% select(contains("10") & contains("11"))
-## q10 > q11
+## q10 > 11
 Strict.Standard.MuH.CID5.ci.Rates.10.11 <- Strict.Standard.MuH.CID5.ci.Rates.q10q11 %>% select(contains("q10"))
-## q11 > q10
+## q11 > 10
 Strict.Standard.MuH.CID5.ci.Rates.11.10 <- Strict.Standard.MuH.CID5.ci.Rates.q10q11 %>% select(contains("q11"))
 
 ## Collate all into a new dataframe for plotting
