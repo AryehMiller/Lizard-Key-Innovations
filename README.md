@@ -2,7 +2,7 @@
 
 This repository contains code and data associated with the study by Miller and Stroud titled "Novel Tests of the Key Innovation Hypothesis: Adhesive Toepads in Arboreal Lizards" in Systematic Biology (https://doi.org/10.1093/sysbio/syab041). We provide the R scripts to replicate the analytical pipeline and reproduce the results we present. For any questions or inquiries, please e-mail aryehmiller(at)wustl(dot)edu. 
 
-Within the "Trait Data" folder: 
+Within the "Supplemental Tables" folder: 
 
 Supplementary Table 1 (Full_Dataset_2692_TableS1.csv): The "Full" dataset comprising 2692 species with all associated data. 
 
