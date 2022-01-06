@@ -448,7 +448,7 @@ Full.Multi.Arboreal <- as.factor(setNames(Full.Multi.Dataset[,6],rownames(Full.M
 
 Multi.pi<-setNames(c(0,1,0),c("arboreal", "not.arboreal","semi.arboreal"))
 
-#Multi.pi<-setNames(c(1,0,0),c("not.arboreal", "semi.arboreal","arboreal")) this is WRONG-- root node 100% arboreal
+#Multi.pi<-setNames(c(1,0,0),c("not.arboreal", "semi.arboreal","arboreal"))
 #fit two Mk models
 
 #fitARD.Multi.arbor.full<-fitMk(FullTree,Full.Multi.Arboreal,pi=Multi.pi,model="ARD")
